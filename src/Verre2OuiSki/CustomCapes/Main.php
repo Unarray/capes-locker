@@ -8,6 +8,7 @@ use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use Verre2OuiSki\CustomCapes\Commands\Capes;
+use Verre2OuiSki\CustomCapes\Commands\ManageCapes;
 
 class Main extends PluginBase{
 
@@ -49,6 +50,7 @@ class Main extends PluginBase{
         $this->players_capes = new Config( $this->getDataFolder() . "players_capes.yml", Config::YAML );
 
         $this->getServer()->getCommandMap()->register( $this->getName(), new Capes($this) );
+        $this->getServer()->getCommandMap()->register( $this->getName(), new ManageCapes($this) );
     }
 
     private function capeIdToCapeData( string $cape_id ){
@@ -91,6 +93,15 @@ class Main extends PluginBase{
      */
     public function getCapes(){
         return $this->capes;
+    }
+
+    /**
+     * Return cape info
+     * @param string $cape_id
+     * @return NULL|array
+     */
+    public function getCapeById(string $cape_id){
+        return $this->capes[$cape_id] ?? NULL;
     }
 
     /**
@@ -208,11 +219,19 @@ class Main extends PluginBase{
      */
     public function getPlayerCapes(Player $player) : array {
         $this->players_capes->reload();
-        $player_capes = $this->players_capes->get(
-            $player->getUniqueId()->toString()
+        $player_capes_id = $this->players_capes->get(
+            $player->getUniqueId()->toString(),
+            []
         );
 
-        return $player_capes ? $player_capes : [];
+        $player_capes = [];
+        foreach ($player_capes_id as $cape_id) {
+            $cape = $this->getCapeById($cape_id);
+            if($cape){
+                $player_capes[$cape_id] = $cape;
+            }
+        }
+        return $player_capes;
     }
 
 }

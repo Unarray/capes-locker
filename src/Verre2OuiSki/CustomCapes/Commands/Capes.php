@@ -71,14 +71,30 @@ class Capes extends Command{
         ];
         $options_cape_link = [];
 
+        $unlocked_capes = $this->plugin->getPlayerCapes($player);
+        $locked_capes = array_diff($this->plugin->getCapes(), $unlocked_capes);
 
-        foreach($this->plugin->getCapes() as $cape_id => $cape){
+        // Set player capes at top of the menu
+        foreach ($unlocked_capes as $cape_id => $cape) {
+            array_push(
+                $options,
+                new MenuOption(
+                    $cape["name"],
+                    new FormIcon("textures/ui/icon_unlocked", FormIcon::IMAGE_TYPE_PATH)
+                )
+            );
+            $options_cape_link[array_key_last($options)] = $cape_id;
+
+        }
+
+        // Locked capes after unlocked capes
+        foreach($locked_capes as $cape_id => $cape){
 
             array_push(
                 $options,
                 new MenuOption(
                     $cape["name"],
-                    $this->plugin->hasCape($player, $cape_id) ? new FormIcon("textures/ui/icon_unlocked", FormIcon::IMAGE_TYPE_PATH) : new FormIcon("textures/ui/icon_lock", FormIcon::IMAGE_TYPE_PATH)
+                    new FormIcon("textures/ui/icon_lock", FormIcon::IMAGE_TYPE_PATH)
                 )
             );
             $options_cape_link[array_key_last($options)] = $cape_id;
