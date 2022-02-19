@@ -72,6 +72,11 @@ class ManageCapes extends Command{
             $sender->sendMessage("§aYou have unlocked the cape §2$cape_id §ato the player §2" . $player->getName()); return;
         }
 
+        // Send manage capes form
+        if($sender instanceof Player){
+            $sender->sendForm($this->playerCapeList($player ?? $sender));
+        }
+
     }
 
     
