@@ -35,7 +35,7 @@ class ManageCapes extends Command{
         
         $player = $this->plugin->getServer()->getPlayerByPrefix($args[0] ?? "");
         $cape_id = $args[1] ?? null;
-        $action_type = strtolower($args[2]) ?? null;
+        $action_type = $args[2] ?? null;
 
         
         // Sender isn't a player and didn't specify args
@@ -58,6 +58,7 @@ class ManageCapes extends Command{
             }
 
             // if action isn't lock or unlock
+            $action_type = strtolower($action_type);
             if($action_type !== "lock" && $action_type !== "unlock"){
                 $sender->sendMessage("§cInvalid action : $cape_id\nuse 'lock' or 'unlock' action"); return;
             }
@@ -76,6 +77,7 @@ class ManageCapes extends Command{
     
     private function playerCapeList(Player $player_capes){
 
+        $options = [];
         $options_cape_link = [];
 
         $unlocked_capes = $this->plugin->getPlayerCapes($player_capes);
@@ -126,7 +128,6 @@ class ManageCapes extends Command{
     private function capeOptions(Player $player_capes, $selected_cape){
 
         $cape = $this->plugin->getCapes()[$selected_cape];
-        $player_has_cape = $this->plugin->hasCape($player_capes, $selected_cape);
 
         return new MenuForm(
             $cape["name"],
@@ -145,7 +146,7 @@ class ManageCapes extends Command{
                     new FormIcon("textures/ui/arrow_left", FormIcon::IMAGE_TYPE_PATH)
                 )
             ],
-            function(Player $submitter, int $choice) use ($selected_cape, $player_has_cape, $player_capes) : void{
+            function(Player $submitter, int $choice) use ($selected_cape, $player_capes) : void{
 
                 // If player go back
                 if($choice == 2){
