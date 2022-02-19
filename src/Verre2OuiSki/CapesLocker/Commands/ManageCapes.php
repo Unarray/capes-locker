@@ -23,7 +23,7 @@ class ManageCapes extends Command{
             "/mcapes <player> [cape id] [lock|unlock]",
             ["mcapes"]
         );
-        $this->setPermission("customcapes.command.managecapes");
+        $this->setPermission("capeslocker.command.managecapes");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args){
