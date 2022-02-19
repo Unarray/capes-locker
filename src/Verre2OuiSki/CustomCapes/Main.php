@@ -9,6 +9,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use Verre2OuiSki\CustomCapes\Commands\Capes;
 use Verre2OuiSki\CustomCapes\Commands\ManageCapes;
+use Verre2OuiSki\CustomCapes\Commands\PlayersCapesCleaner;
 
 class Main extends PluginBase{
 
@@ -49,6 +50,7 @@ class Main extends PluginBase{
 
         $this->getServer()->getCommandMap()->register( $this->getName(), new Capes($this) );
         $this->getServer()->getCommandMap()->register( $this->getName(), new ManageCapes($this) );
+        $this->getServer()->getCommandMap()->register( $this->getName(), new PlayersCapesCleaner($this) );
     }
 
     private function capeIdToCapeData( string $cape_id ){
@@ -127,7 +129,8 @@ class Main extends PluginBase{
         if($this->players_capes->exists($player_uuid)){
 
             $player_capes = $this->players_capes->get($player_uuid);
-            $this->players_capes->set( $player_uuid, array_push($player_capes, $cape_id) );
+            array_push($player_capes, $cape_id);
+            $this->players_capes->set( $player_uuid, $player_capes );
 
         }else{
             $this->players_capes->set( $player_uuid, [$cape_id] );
@@ -238,6 +241,10 @@ class Main extends PluginBase{
             }
         }
         return $player_capes;
+    }
+
+    public function getPlayersCapes(){
+        return $this->players_capes;
     }
 
 }
