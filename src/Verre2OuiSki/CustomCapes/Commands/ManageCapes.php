@@ -20,7 +20,7 @@ class ManageCapes extends Command{
         parent::__construct(
             "managecapes",
             "Manage capes of a player",
-            "/mcapes [player] [cape id] [lock|unlock]",
+            "/mcapes <player> [cape id] [lock|unlock]",
             ["mcapes"]
         );
         $this->setPermission("customcapes.command.managecapes");
@@ -33,23 +33,23 @@ class ManageCapes extends Command{
             $sender->sendMessage($this->getPermissionMessage()); return;
         }
         
-        $player = $this->plugin->getServer()->getPlayerByPrefix($args[0] ?? "");
+        $player = $this->plugin->getServer()->getPlayerByPrefix($args[0] ?? "😋");
         $cape_id = $args[1] ?? null;
         $action_type = $args[2] ?? null;
 
         
-        // Sender isn't a player and didn't specify args
-        if(!$sender instanceof Player &&  !$action_type){
+        // Sender isn't a player and didn't specify args OR player isn't specify
+        if((!$sender instanceof Player && !$action_type) || !isset($args[0])){
             $sender->sendMessage($this->getUsage()); return;
+        }
+
+        // If player selected isn't connected
+        if(!$player){
+            $sender->sendMessage("§cCan't find player : $args[0]"); return;
         }
 
         // If sender use command
         if( $action_type ){
-
-            // If player selected isn't connected
-            if(!$player){
-                $sender->sendMessage("§cCan't find player : $args[0]"); return;
-            }
 
             $cape = $this->plugin->getCapeById($cape_id);
             // If cape selected doesn't exist
@@ -65,16 +65,20 @@ class ManageCapes extends Command{
 
             if($action_type === "lock"){
                 $this->plugin->lockCape($player, $cape_id);
-                $sender->sendMessage("§aYou have locked the cape §2$cape_id §ato the player §2" . $player->getName()); return;
+                $sender->sendMessage("$cape_id has been removed from " . $player->getName() . "'s capes");
+                $player->sendMessage($cape["name"] . " §rhas been removed from your capes by " . $sender->getName());
+                return;
             }
 
             $this->plugin->unlockCape($player, $cape_id);
-            $sender->sendMessage("§aYou have unlocked the cape §2$cape_id §ato the player §2" . $player->getName()); return;
+            $sender->sendMessage("$cape_id has been added to " . $player->getName() . "'s capes");
+            $player->sendMessage($cape["name"] . " §rhas been added to your capes by " . $sender->getName());
+            return;
         }
 
         // Send manage capes form
         if($sender instanceof Player){
-            $sender->sendForm($this->playerCapeList($player ?? $sender));
+            $sender->sendForm($this->playerCapeList($player));
         }
 
     }
@@ -86,7 +90,7 @@ class ManageCapes extends Command{
         $options_cape_link = [];
 
         $unlocked_capes = $this->plugin->getPlayerCapes($player_capes);
-        $locked_capes = array_diff($this->plugin->getCapes(), array_merge($this->plugin->getDefaultCapes(), $unlocked_capes));
+        $locked_capes = array_diff_key($this->plugin->getCapes(), array_merge($this->plugin->getDefaultCapes(), $unlocked_capes));
 
         // Set player capes at top of the menu
         foreach ($unlocked_capes as $cape_id => $cape) {
@@ -172,7 +176,7 @@ class ManageCapes extends Command{
                 }
 
                 // If the cape has been added
-                $this->plugin->lockCape($player_capes, $selected_cape);
+                $this->plugin->unlockCape($player_capes, $selected_cape);
                 $submitter->sendMessage("$selected_cape has been added to " . $player_capes->getName() . "'s capes");
                 $player_capes->sendMessage("$cape_name §rhas been added to your capes by " . $submitter->getName());
             }
