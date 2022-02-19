@@ -28,7 +28,7 @@ class Capes extends Command{
 
         parent::__construct(
             "capes",
-            "Open capes menu !",
+            "Open your capes locker menu !",
             "/capes"
         );
         $this->setPermission("capeslocker.command.capes");
