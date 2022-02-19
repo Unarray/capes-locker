@@ -1,15 +1,15 @@
 <?php
 
-namespace Verre2OuiSki\CustomCapes\Commands;
+namespace Verre2OuiSki\CapesLocker\Commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\scheduler\ClosureTask;
-use Verre2OuiSki\CustomCapes\libs\dktapps\pmforms\FormIcon;
-use Verre2OuiSki\CustomCapes\libs\dktapps\pmforms\MenuForm;
-use Verre2OuiSki\CustomCapes\libs\dktapps\pmforms\MenuOption;
-use Verre2OuiSki\CustomCapes\Main;
+use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\FormIcon;
+use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\MenuForm;
+use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\MenuOption;
+use Verre2OuiSki\CapesLocker\Main;
 
 class Capes extends Command{
 
@@ -31,7 +31,7 @@ class Capes extends Command{
             "Open capes menu !",
             "/capes"
         );
-        $this->setPermission("customcapes.command.capes");
+        $this->setPermission("capeslocker.command.capes");
 
         $config = $this->plugin->getConfig();
         $this->cooldown = $config->get("cape_cooldown");

@@ -1,8 +1,8 @@
 ---
 
-name: CustomCapes
+name: CapesLocker
 version: 1.0.0
-main: Verre2OuiSki\CustomCapes\Main
+main: Verre2OuiSki\CapesLocker\Main
 api: 4.0.0
 
 author: Verre2OuiSki
@@ -13,15 +13,15 @@ website: https://github.com/Verre2OuiSki
 
 permissions:
 
-  customcapes.command.capes:
+  capeslocker.command.capes:
     description: "Allow the player to run \"capes\" command"
     default: true
 
-  customcapes.command.managecapes:
+  capeslocker.command.managecapes:
     description: "Allow the player to run \"managecapes\" command"
     default: op
 
-  customcapes.command.playerscapescleaner:
+  capeslocker.command.playerscapescleaner:
     description: "Allow the player to run \"playerscapescleaner\" command"
     default: op
 ...

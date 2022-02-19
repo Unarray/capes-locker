@@ -1,10 +1,10 @@
 <?php
 
-namespace Verre2OuiSki\CustomCapes\Commands;
+namespace Verre2OuiSki\CapesLocker\Commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use Verre2OuiSki\CustomCapes\Main;
+use Verre2OuiSki\CapesLocker\Main;
 
 class PlayersCapesCleaner extends Command{
 
@@ -17,7 +17,7 @@ class PlayersCapesCleaner extends Command{
             "WARNING ! This command remove all undefined capes in 'capes.json' from capes lockers of players.",
             "/playerscapescleaner"
         );
-        $this->setPermission("customcapes.command.playerscapescleaner");
+        $this->setPermission("capeslocker.command.playerscapescleaner");
     }
 
     public function execute(CommandSender $sender, string $commandLabel, array $args){

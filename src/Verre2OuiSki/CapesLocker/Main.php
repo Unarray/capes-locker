@@ -1,15 +1,15 @@
 <?php
 
-namespace Verre2OuiSki\CustomCapes;
+namespace Verre2OuiSki\CapesLocker;
 
 use Exception;
 use pocketmine\entity\Skin;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
-use Verre2OuiSki\CustomCapes\Commands\Capes;
-use Verre2OuiSki\CustomCapes\Commands\ManageCapes;
-use Verre2OuiSki\CustomCapes\Commands\PlayersCapesCleaner;
+use Verre2OuiSki\CapesLocker\Commands\Capes;
+use Verre2OuiSki\CapesLocker\Commands\ManageCapes;
+use Verre2OuiSki\CapesLocker\Commands\PlayersCapesCleaner;
 
 class Main extends PluginBase{
 
