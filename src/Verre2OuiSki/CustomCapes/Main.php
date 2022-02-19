@@ -16,6 +16,7 @@ class Main extends PluginBase{
 
     /** @var array $capes */
     private $capes;
+    private $default_capes = [];
     /** @var Config $players_capes */
     private $players_capes;
 
@@ -33,20 +34,17 @@ class Main extends PluginBase{
         self::$_instance = $this;
         
         foreach($this->getResources() as $file){
-
-            $folder = substr_replace($file->getPath(), "", 0, strlen($this->getDataFolder()));
-
-            var_dump($folder);
-            if(strlen($folder) !== 0){
-                @mkdir($file->getPath());
-            }
-
-            $this->saveResource(
-                $folder . "/" . $file->getFilename()
-            );
+            $this->saveResource($file->getFilename());
         }
 
         $this->capes = (new Config( $this->getDataFolder() . "capes.json", Config::JSON ))->get("capes", []);
+
+        foreach( $this->capes as $cape_id => $cape ){
+            if($cape["default"]){
+                $this->default_capes[$cape_id] = $cape;
+            }
+        }
+
         $this->players_capes = new Config( $this->getDataFolder() . "players_capes.yml", Config::YAML );
 
         $this->getServer()->getCommandMap()->register( $this->getName(), new Capes($this) );
@@ -88,11 +86,19 @@ class Main extends PluginBase{
 // - - - PLUGIN API
 
     /**
-     * Return all capes with their config
+     * Return all capes
      * @return array
      */
     public function getCapes(){
         return $this->capes;
+    }
+
+    /**
+     * Return all default capes
+     * @return array
+     */
+    public function getDefaultCapes(){
+        return $this->default_capes;
     }
 
     /**
@@ -213,7 +219,7 @@ class Main extends PluginBase{
     }
 
     /**
-     * Get all capes id of a player
+     * Return unlocked player's capes (default capes isn't include)
      * @param Player $player Player to get his capes
      * @return array
      */
