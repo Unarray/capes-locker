@@ -50,12 +50,12 @@ class Capes extends Command{
 
         // Sender doesn't have permission to execute this command
         if(!$sender->hasPermission($this->getPermission())){
-            return $sender->sendMessage($this->getPermissionMessage());
+            $sender->sendMessage($this->getPermissionMessage()); return;
         }
         
         // Sender isn't a player
         if(!$sender instanceof Player){
-            return $sender->sendMessage("§cYou must be a player to execute this command");
+            $sender->sendMessage("§cYou must be a player to execute this command"); return;
         }
 
         $sender->sendForm( $this->capesList($sender) );       

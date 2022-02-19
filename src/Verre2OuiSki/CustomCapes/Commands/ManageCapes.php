@@ -27,7 +27,7 @@ class ManageCapes extends Command{
         
         // Sender doesn't have permission to execute this command
         if(!$sender->hasPermission($this->getPermission())){
-            return $sender->sendMessage($this->getPermissionMessage());
+            $sender->sendMessage($this->getPermissionMessage()); return;
         }
         
         $player = $this->plugin->getServer()->getPlayerByPrefix($args[0] ?? "");
@@ -39,7 +39,7 @@ class ManageCapes extends Command{
 
             // If player isn't connected
             if(is_null($player)){
-                return $sender->sendMessage("§cCan't find player : $args[0]");
+                $sender->sendMessage("§cCan't find player : $args[0]"); return;
             }
 
             return;
