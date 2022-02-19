@@ -2,13 +2,13 @@
 
 namespace Verre2OuiSki\CustomCapes\Commands;
 
-use dktapps\pmforms\FormIcon;
-use dktapps\pmforms\MenuForm;
-use dktapps\pmforms\MenuOption;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\scheduler\ClosureTask;
+use Verre2OuiSki\CustomCapes\libs\dktapps\pmforms\FormIcon;
+use Verre2OuiSki\CustomCapes\libs\dktapps\pmforms\MenuForm;
+use Verre2OuiSki\CustomCapes\libs\dktapps\pmforms\MenuOption;
 use Verre2OuiSki\CustomCapes\Main;
 
 class Capes extends Command{

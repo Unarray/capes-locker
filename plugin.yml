@@ -2,7 +2,6 @@
 
 name: CustomCapes
 version: 1.0.0
-src-namespace-prefix: Verre2OuiSki\CustomCapes
 main: Verre2OuiSki\CustomCapes\Main
 api: 4.0.0
 
