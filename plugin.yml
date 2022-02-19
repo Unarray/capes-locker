@@ -1,0 +1,24 @@
+---
+
+name: CustomCapes
+version: 1.0.0
+src-namespace-prefix: Verre2OuiSki\CustomCapes
+main: Verre2OuiSki\CustomCapes\Main
+api: 4.0.0
+
+author: Verre2OuiSki
+description: Add our own cape on the server !
+website: https://github.com/Verre2OuiSki
+
+# - - - - - - - - - - - - - - - -
+
+permissions:
+
+  customcapes.command.capes:
+    description: "Allow the player to run \"capes\" command"
+    default: true
+
+  customcapes.command.managecapes:
+    description: "Allow the player to run \"managecapes\" command"
+    default: op
+...
