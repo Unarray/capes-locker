@@ -136,7 +136,7 @@ class CapesLocker extends PluginBase{
 
     /**
      * Get alls players capes
-     * @return array
+     * @return Config
      */
     public function getPlayersCapes(){
         return $this->players_capes;
