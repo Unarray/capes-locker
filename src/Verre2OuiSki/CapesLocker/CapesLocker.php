@@ -11,7 +11,7 @@ use Verre2OuiSki\CapesLocker\Commands\Capes;
 use Verre2OuiSki\CapesLocker\Commands\ManageCapes;
 use Verre2OuiSki\CapesLocker\Commands\PlayersCapesCleaner;
 
-class Main extends PluginBase{
+class CapesLocker extends PluginBase{
 
     private static $_instance;
 
@@ -38,7 +38,7 @@ class Main extends PluginBase{
             $this->saveResource($file->getFilename());
         }
 
-        $this->capes = (new Config( $this->getDataFolder() . "capes.json", Config::JSON ))->get("capes", []);
+        $this->capes = (new Config( $this->getDataFolder() . "capes.json", Config::JSON ))->getAll();
 
         foreach( $this->capes as $cape_id => $cape ){
             if($cape["default"]){
@@ -108,8 +108,38 @@ class Main extends PluginBase{
      * @param string $cape_id
      * @return NULL|array
      */
-    public function getCapeById(string $cape_id){
+    public function getCapeById($cape_id){
         return $this->capes[$cape_id] ?? NULL;
+    }
+
+    /**
+     * Return unlocked player's capes (default capes isn't include)
+     * @param Player $player Player to get his capes
+     * @return array
+     */
+    public function getPlayerCapes($player){
+        $this->players_capes->reload();
+        $player_capes_id = $this->players_capes->get(
+            $player->getUniqueId()->toString(),
+            []
+        );
+
+        $player_capes = [];
+        foreach ($player_capes_id as $cape_id) {
+            $cape = $this->getCapeById($cape_id);
+            if($cape){
+                $player_capes[$cape_id] = $cape;
+            }
+        }
+        return $player_capes;
+    }
+
+    /**
+     * Get alls players capes
+     * @return array
+     */
+    public function getPlayersCapes(){
+        return $this->players_capes;
     }
 
     /**
@@ -118,7 +148,7 @@ class Main extends PluginBase{
      * @param string $cape_id The ID of the cape to unlock
      * @return void
      */
-    public function unlockCape( Player $player, string $cape_id ) : void{
+    public function unlockCape( $player, $cape_id ){
 
         if($this->hasCape($player, $cape_id)) return;
 
@@ -145,7 +175,7 @@ class Main extends PluginBase{
      * @param string $cape_id The ID of the cape to lock
      * @return void
      */
-    public function lockCape( Player $player, string $cape_id) : void{
+    public function lockCape( $player, $cape_id){
 
         // if cape is unlock by default OR player doesn't have this cape
         if($this->capes[$cape_id]["default"] || !$this->hasCape($player, $cape_id)) return;
@@ -172,7 +202,7 @@ class Main extends PluginBase{
      * @param string $cape_id The ID of the cape to be equipped
      * @return void
      */
-    public function setPlayerCape( Player $player, string $cape_id = null ){
+    public function setPlayerCape( $player, $cape_id = null ){
 
         $old_skin = $player->getSkin();
 
@@ -210,7 +240,7 @@ class Main extends PluginBase{
      * @param string $cape_id The ID of the cape to check
      * @return bool
      */
-    public function hasCape( Player $player, string $cape_id ) : bool{
+    public function hasCape( $player, $cape_id ){
 
         if( $this->capes[$cape_id]["default"] ) return true;
 
@@ -219,32 +249,6 @@ class Main extends PluginBase{
             $player->getUniqueId()->toString()
         );
         return $player_capes ? in_array($cape_id, $player_capes) : false;
-    }
-
-    /**
-     * Return unlocked player's capes (default capes isn't include)
-     * @param Player $player Player to get his capes
-     * @return array
-     */
-    public function getPlayerCapes(Player $player) : array {
-        $this->players_capes->reload();
-        $player_capes_id = $this->players_capes->get(
-            $player->getUniqueId()->toString(),
-            []
-        );
-
-        $player_capes = [];
-        foreach ($player_capes_id as $cape_id) {
-            $cape = $this->getCapeById($cape_id);
-            if($cape){
-                $player_capes[$cape_id] = $cape;
-            }
-        }
-        return $player_capes;
-    }
-
-    public function getPlayersCapes(){
-        return $this->players_capes;
     }
 
 }

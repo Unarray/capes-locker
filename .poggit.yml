@@ -5,7 +5,7 @@ branches:
 projects:
   CapesLocker:
     path: ""
-    icon: icon.png
+    icon: ./meta/icon.png
     libs:
       - src: dktapps-pm-pl/pmforms/pmforms
         version: ^2.0.0

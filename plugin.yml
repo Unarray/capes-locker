@@ -2,7 +2,7 @@
 
 name: CapesLocker
 version: 1.0.0
-main: Verre2OuiSki\CapesLocker\Main
+main: Verre2OuiSki\CapesLocker\CapesLocker
 api: 4.0.0
 
 author: Verre2OuiSki

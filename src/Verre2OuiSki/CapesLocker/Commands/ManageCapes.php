@@ -8,13 +8,13 @@ use pocketmine\player\Player;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\FormIcon;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\MenuForm;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\MenuOption;
-use Verre2OuiSki\CapesLocker\Main;
+use Verre2OuiSki\CapesLocker\CapesLocker;
 
 class ManageCapes extends Command{
 
     private $plugin;
 
-    public function __construct( Main $plugin ){
+    public function __construct( CapesLocker $plugin ){
         $this->plugin = $plugin;
 
         parent::__construct(

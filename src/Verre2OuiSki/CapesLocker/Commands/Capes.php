@@ -9,7 +9,7 @@ use pocketmine\scheduler\ClosureTask;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\FormIcon;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\MenuForm;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\MenuOption;
-use Verre2OuiSki\CapesLocker\Main;
+use Verre2OuiSki\CapesLocker\CapesLocker;
 
 class Capes extends Command{
 
@@ -23,7 +23,7 @@ class Capes extends Command{
     private $menu_title;
     private $menu_body;
 
-    public function __construct( Main $plugin ){
+    public function __construct( CapesLocker $plugin ){
         $this->plugin = $plugin;
 
         parent::__construct(

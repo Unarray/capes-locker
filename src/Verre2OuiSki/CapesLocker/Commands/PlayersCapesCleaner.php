@@ -4,13 +4,13 @@ namespace Verre2OuiSki\CapesLocker\Commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use Verre2OuiSki\CapesLocker\Main;
+use Verre2OuiSki\CapesLocker\CapesLocker;
 
 class PlayersCapesCleaner extends Command{
 
     private $plugin;
 
-    public function __construct(Main $plugin){
+    public function __construct(CapesLocker $plugin){
         $this->plugin = $plugin;
         parent::__construct(
             "playerscapescleaner",
