@@ -172,8 +172,10 @@ After that, go to the file `capes.json` and save the desired cape.
         </td>
     </tr>
 </table>
+<a href="https://raw.githubusercontent.com/Verre2OuiSki/CapesLocker/main/meta/cape_template.png">
+    <img width="50%" src="https://raw.githubusercontent.com/Verre2OuiSki/CapesLocker/main/meta/cape_template.png"></img>
+</a>
 
-![Cape Template](https://raw.githubusercontent.com/Verre2OuiSki/CapesLocker/main/meta/cape_template.png)
 
 
 # 💾 Config
