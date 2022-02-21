@@ -159,7 +159,7 @@ class CapesLocker extends PluginBase{
     }
 
     /**
-     * Get alls players capes
+     * Get alls players capes (default capes and permitted capes isn't include)
      * @return Config
      */
     public function getPlayersCapes(){

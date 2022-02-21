@@ -108,8 +108,9 @@ After that, go to the file `capes.json` and save the desired cape.
     "description": "This cape is part of a tutorial for the CapesLocker plugin!",
     "cape": "file_name",
     "default": true
-},
+}
 ```
+
 `name`          => Cape name show in menu<br>
 `description`   => Cape description show in menu<br>
 `cape`          => Name of the cape file (without extension .png)<br>
@@ -190,16 +191,18 @@ After that, go to the file `capes.json` and save the desired cape.
 
 # 🧐 How unlock capes ?
 
-Capes can be locked and unlocked by 3
+> <h4>Capes can be locked and unlocked by 3 ways :</h4>
 
-- Permissions :
-> Using permissions, you can lock or unlock capes.
-> Permissions are like this : `capeslocker.cape.cape_identifier`
-> "cape_identifier" is define in "capes.json"
-- In-game Menu :
-> Players who have `capeslocker.command.managecape` permission or OP players, can lock or unlock cape of other players.
-- Plugins :
-> CapesLocker has an api for developers. You can see it in detail in the "For developers" tab !
+__**Permissions :**__
+Using permissions, you can lock or unlock capes.
+Permissions are like this : `capeslocker.cape.cape_identifier`
+"cape_identifier" is define in "capes.json"</br></br>
+
+__**In-game Menu :**__
+Players who have `capeslocker.command.managecape` permission or OP players, can lock or unlock cape of other players.</br></br>
+
+__**Plugins :**__
+CapesLocker has an API for developers. You can see it in detail in the "For developers" tab !
 
 
 
@@ -305,16 +308,24 @@ If you want more detail, you can check the main file of this plugin
 ```
 `getPlayerCapes($player)`
 
+### Get player permitted capes
+```php
+/**
+ * Return permitted player's capes (default capes isn't include)
+ * @param Player $player Player to get his capes
+ * @return array
+ */
+```
+`getPlayerPermittedCapes($player)`
 
 ### Get all players capes
 ```php
 /**
- * Get alls players capes
+ * Get alls players capes (default capes and permitted capes isn't include)
  * @return array
  */
 ```
 `getPlayersCapes()`
-
 
 ### Unlock a player cape
 ```php
