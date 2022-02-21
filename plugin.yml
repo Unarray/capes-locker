@@ -1,9 +1,10 @@
 ---
 
 name: CapesLocker
-version: 1.0.0
+version: 2.0.0
 main: Verre2OuiSki\CapesLocker\CapesLocker
 api: 4.0.0
+extensions: [gd]
 
 author: Verre2OuiSki
 description: Add your own capes to the server !

@@ -90,7 +90,7 @@ class ManageCapes extends Command{
         $options_cape_link = [];
 
         $unlocked_capes = $this->plugin->getPlayerCapes($player_capes);
-        $locked_capes = array_diff_key($this->plugin->getCapes(), array_merge($this->plugin->getDefaultCapes(), $unlocked_capes));
+        $locked_capes = array_diff_key($this->plugin->getCapes(), array_merge($this->plugin->getDefaultCapes(), $unlocked_capes, $this->plugin->getPlayerPermittedCapes($player_capes)));
 
         // Set player capes at top of the menu
         foreach ($unlocked_capes as $cape_id => $cape) {

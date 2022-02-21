@@ -73,6 +73,17 @@
 </p>
 
 
+# 📜 Features
+
+- Add your own cape
+- An intuitive UI
+- Permissions for capes
+- Add capes to locker without permission
+- An API for more possibilities (like capes shop)
+
+For any problems, you can reach me at "Reach ME" tab !
+
+
 
 # 💻 Commands
 
@@ -83,7 +94,7 @@ Command | Aliases | Permission | Default | Description
 `/playerscapescleaner` |  | capeslockers.command.playerscapescleaner | `op` | WARNING ! This command remove all undefined capes in 'capes.json' from capes lockers of players.
 
 
-# 🤔 How to add a cape ?
+# 🤔 How to add your cape ?
 
 Firstly, cape must be a **PNG** file of 64x32 pixels.
 Capes file is the property of a vanilla minecraft bedrock cape.
@@ -99,7 +110,6 @@ After that, go to the file `capes.json` and save the desired cape.
     "default": true
 },
 ```
-
 `name`          => Cape name show in menu<br>
 `description`   => Cape description show in menu<br>
 `cape`          => Name of the cape file (without extension .png)<br>
@@ -117,9 +127,9 @@ After that, go to the file `capes.json` and save the desired cape.
         </th>
         <th rowspan="0" align="center">
             <a href="https://raw.githubusercontent.com/Verre2OuiSki/CapesLocker/main/meta/cape_template.png">
-                <h2>
+                <p>
                     This is a template, you do not have to use it.
-                </h2>
+                </p>
             </a>
         </th>
     </tr>
@@ -175,6 +185,21 @@ After that, go to the file `capes.json` and save the desired cape.
 <a href="https://raw.githubusercontent.com/Verre2OuiSki/CapesLocker/main/meta/cape_template.png">
     <img width="50%" src="https://raw.githubusercontent.com/Verre2OuiSki/CapesLocker/main/meta/cape_template.png"></img>
 </a>
+
+
+
+# 🧐 How unlock capes ?
+
+Capes can be locked and unlocked by 3
+
+- Permissions :
+> Using permissions, you can lock or unlock capes.
+> Permissions are like this : `capeslocker.cape.cape_identifier`
+> "cape_identifier" is define in "capes.json"
+- In-game Menu :
+> Players who have `capeslocker.command.managecape` permission or OP players, can lock or unlock cape of other players.
+- Plugins :
+> CapesLocker has an api for developers. You can see it in detail in the "For developers" tab !
 
 
 

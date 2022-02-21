@@ -4,6 +4,9 @@ namespace Verre2OuiSki\CapesLocker;
 
 use Exception;
 use pocketmine\entity\Skin;
+use pocketmine\permission\DefaultPermissions;
+use pocketmine\permission\Permission;
+use pocketmine\permission\PermissionManager;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -26,12 +29,6 @@ class CapesLocker extends PluginBase{
     }
 
     public function onEnable() : void {
-
-        if(!extension_loaded("gd")){
-            $this->getServer()->getLogger()->error("Please enable GB");
-            $this->getServer()->getPluginManager()->disablePlugin($this);
-        }
-
         self::$_instance = $this;
         
         foreach($this->getResources() as $file){
@@ -40,9 +37,17 @@ class CapesLocker extends PluginBase{
 
         $this->capes = (new Config( $this->getDataFolder() . "capes.json", Config::JSON ))->getAll();
 
+        $perm_manager = PermissionManager::getInstance();
         foreach( $this->capes as $cape_id => $cape ){
             if($cape["default"]){
                 $this->default_capes[$cape_id] = $cape;
+            }else{
+                $permission = new Permission(
+                    "capeslocker.cape." . $cape_id,
+                    "Allow players to use \" " . $cape["name"] . " \" cape"
+                );
+                $perm_manager->addPermission($permission);
+                $perm_manager->getPermission(DefaultPermissions::ROOT_OPERATOR)->addChild($permission->getName(), true);
             }
         }
 
@@ -131,6 +136,25 @@ class CapesLocker extends PluginBase{
                 $player_capes[$cape_id] = $cape;
             }
         }
+        return $player_capes;
+    }
+
+    /**
+     * Return permitted player's capes (default capes isn't include)
+     * @param Player $player Player to get his capes
+     * @return array
+     */
+    public function getPlayerPermittedCapes($player){
+        
+        $player_capes = [];
+        $capes = array_diff_key( $this->capes, $this->default_capes );
+
+        foreach($capes as $cape_id => $cape){
+            if( $player->hasPermission( "capeslocker.cape." . $cape_id ) ){
+                $player_capes[$cape_id] = $cape;
+            }
+        }
+
         return $player_capes;
     }
 
@@ -243,6 +267,7 @@ class CapesLocker extends PluginBase{
     public function hasCape( $player, $cape_id ){
 
         if( $this->capes[$cape_id]["default"] ) return true;
+        if( $player->hasPermission( "capeslocker.cape." . $cape_id ) ) return true;
 
         $this->players_capes->reload();
         $player_capes = $this->players_capes->get(
