@@ -49,9 +49,8 @@ class Capes extends Command{
     public function execute(CommandSender $sender, string $commandLabel, array $args){
 
         // Sender doesn't have permission to execute this command
-        if(!$sender->hasPermission($this->getPermission())){
-            $sender->sendMessage($this->getPermissionMessage()); return;
-        }
+        if(!$this->testPermission($sender, $this->getPermission())) return;
+
         
         // Sender isn't a player
         if(!$sender instanceof Player){

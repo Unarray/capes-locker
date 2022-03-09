@@ -22,6 +22,8 @@ class PlayersCapesCleaner extends Command{
 
     public function execute(CommandSender $sender, string $commandLabel, array $args){
 
+        if(!$this->testPermission($sender, $this->getPermission())) return;
+
         $capes = array_keys($this->plugin->getCapes());
         $players_capes = $this->plugin->getPlayersCapes()->getAll();
 

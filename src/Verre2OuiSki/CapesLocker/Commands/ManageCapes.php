@@ -29,9 +29,8 @@ class ManageCapes extends Command{
     public function execute(CommandSender $sender, string $commandLabel, array $args){
         
         // Sender doesn't have permission to execute this command
-        if(!$sender->hasPermission($this->getPermission())){
-            $sender->sendMessage($this->getPermissionMessage()); return;
-        }
+        if(!$this->testPermission($sender, $this->getPermission())) return;
+
         
         $player = $this->plugin->getServer()->getPlayerByPrefix($args[0] ?? "😋");
         $cape_id = $args[1] ?? null;
