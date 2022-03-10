@@ -29,11 +29,11 @@
                     With this menu, see all capes you can have and chose one of them !
                 </td>
                 <td>
-                    <u><h4>A capes locker menu !</h4></u>
+                    <u><h4>Cape options menu !</h4></u>
                     This is the menu when you select a cape you have unlocked.<br>You can equip it or go back to capes menu
                 </td>
                 <td>
-                    <u><h4>A capes locker menu !</h4></u>
+                    <u><h4>Cape options menu !</h4></u>
                     This is the menu when you select a locked of your locker.<br>You can't equip it <i>(because you don't unlocked it)</i> but you can go back to capes menu
                 </td>
             </tr>
@@ -57,15 +57,15 @@
         <tbody align="center">
             <tr>
                 <td>
-                    <u><h4>A capes locker menu !</h4></u>
-                    With this menu, see all capes you can have and chose one of them !
+                    <u><h4>Manage cape locker of other players !</h4></u>
+                    With this menu, see all capes locker of a player
                 </td>
                 <td>
                     Some default capes :D
                 </td>
                 <td>
-                    <u><h4>A capes locker menu !</h4></u>
-                    This is the menu when you select a cape you have unlocked.<br>You can equip it or go back to capes menu
+                    <u><h4>Managing cape options of other players !</h4></u>
+                    This is the menu when you select a cape of a player.<br>You can lock or unlock it for the player selected or go back to the player capes locker menu
                 </td>
             </tr>
         </tbody>
@@ -239,6 +239,8 @@ menu_title: "Capes list"
 menu_body: "There is some capes you can unlock and use !"
 ...
 ```
+
+
 
 
 
