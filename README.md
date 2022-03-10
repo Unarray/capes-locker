@@ -308,6 +308,25 @@ If you want more detail, you can check the main file of this plugin
 ```
 `getPlayerCapes($player)`
 
+### Get wearing player cape
+```php
+/**
+ * Return cape player wearing
+ * @param Player $player
+ * @return null|string
+ */
+```
+`getWearingCapeId($player)`
+
+### Get wearing cape config
+```php
+/**
+ * Return all wearing capes
+ * @return Config
+ */
+```
+`getWearingCapes()`
+
 ### Get player permitted capes
 ```php
 /**

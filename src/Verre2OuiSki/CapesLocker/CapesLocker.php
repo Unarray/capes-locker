@@ -13,6 +13,7 @@ use pocketmine\utils\Config;
 use Verre2OuiSki\CapesLocker\Commands\Capes;
 use Verre2OuiSki\CapesLocker\Commands\ManageCapes;
 use Verre2OuiSki\CapesLocker\Commands\PlayersCapesCleaner;
+use Verre2OuiSki\CapesLocker\Listeners\SetCape;
 
 class CapesLocker extends PluginBase{
 
@@ -21,8 +22,10 @@ class CapesLocker extends PluginBase{
     /** @var array $capes */
     private $capes;
     private $default_capes = [];
-    /** @var Config $players_capes */
+    /** @var Config */
     private $players_capes;
+    /** @var Config */
+    private $wearing_cape;
 
     public static function getInstance() : self{
         return self::$_instance;
@@ -52,6 +55,9 @@ class CapesLocker extends PluginBase{
         }
 
         $this->players_capes = new Config( $this->getDataFolder() . "players_capes.yml", Config::YAML );
+        $this->wearing_cape = new Config( $this->getDataFolder() . "wearing_cape.yml", Config::YAML );
+
+        $this->getServer()->getPluginManager()->registerEvents( new SetCape($this), $this);
 
         $this->getServer()->getCommandMap()->register( $this->getName(), new Capes($this) );
         $this->getServer()->getCommandMap()->register( $this->getName(), new ManageCapes($this) );
@@ -137,6 +143,24 @@ class CapesLocker extends PluginBase{
             }
         }
         return $player_capes;
+    }
+
+    /**
+     * Return cape player wearing
+     * @param Player $player
+     * @return null|string
+     */
+    public function getWearingCapeId( Player $player ) : null|string{
+        $this->wearing_cape->reload();
+        return $this->wearing_cape->get($player->getUniqueId()->toString(), null);
+    }
+
+    /**
+     * Return all wearing capes
+     * @return Config
+     */
+    public function getWearingCapes() : Config{
+        return $this->wearing_cape;
     }
 
     /**
@@ -229,8 +253,17 @@ class CapesLocker extends PluginBase{
     public function setPlayerCape( $player, $cape_id = null ){
 
         $old_skin = $player->getSkin();
+        $this->wearing_cape->reload();
 
         if(is_null($cape_id)){
+
+            $wear_cape = $this->wearing_cape->get($player->getUniqueId()->toString());
+
+            if($wear_cape){
+                $this->wearing_cape->remove($player->getUniqueId()->toString());
+                $this->wearing_cape->save();
+            }
+
             $player->setSkin(
                 new Skin(
                     $old_skin->getSkinId(),
@@ -243,6 +276,10 @@ class CapesLocker extends PluginBase{
             $player->sendSkin();
             return;
         }
+
+
+        $this->wearing_cape->set($player->getUniqueId()->toString(), $cape_id);
+        $this->wearing_cape->save();
 
         $cape_data = $this->capeIdToCapeData($cape_id);
 
