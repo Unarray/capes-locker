@@ -22,7 +22,7 @@ class SetCape implements Listener
     {
 
         $player = $event->getPlayer();
-        $cape = $this->plugin->getWearingCapeId($player);
+        $cape = (string)$this->plugin->getWearingCapeId($player);
 
         $wearing_capes = $this->plugin->getWearingCapes();
 
