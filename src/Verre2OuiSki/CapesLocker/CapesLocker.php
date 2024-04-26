@@ -15,36 +15,39 @@ use Verre2OuiSki\CapesLocker\Commands\ManageCapes;
 use Verre2OuiSki\CapesLocker\Commands\PlayersCapesCleaner;
 use Verre2OuiSki\CapesLocker\Listeners\SetCape;
 
-class CapesLocker extends PluginBase{
+class CapesLocker extends PluginBase
+{
 
-    private static $_instance;
+    private static CapesLocker $_instance;
 
     /** @var array $capes */
-    private $capes;
-    private $default_capes = [];
+    private array $capes;
+    private array $default_capes = [];
     /** @var Config */
-    private $players_capes;
+    private Config $players_capes;
     /** @var Config */
-    private $wearing_cape;
+    private Config $wearing_cape;
 
-    public static function getInstance() : self{
+    public static function getInstance(): self
+    {
         return self::$_instance;
     }
 
-    public function onEnable() : void {
+    public function onEnable(): void
+    {
         self::$_instance = $this;
-        
-        foreach($this->getResources() as $file){
+
+        foreach ($this->getResources() as $file) {
             $this->saveResource($file->getFilename());
         }
 
-        $this->capes = (new Config( $this->getDataFolder() . "capes.json", Config::JSON ))->getAll();
+        $this->capes = (new Config($this->getDataFolder() . "capes.json", Config::JSON))->getAll();
 
         $perm_manager = PermissionManager::getInstance();
-        foreach( $this->capes as $cape_id => $cape ){
-            if($cape["default"]){
+        foreach ($this->capes as $cape_id => $cape) {
+            if ($cape["default"]) {
                 $this->default_capes[$cape_id] = $cape;
-            }else{
+            } else {
                 $permission = new Permission(
                     "capeslocker.cape." . $cape_id,
                     "Allow players to use \" " . $cape["name"] . " \" cape"
@@ -54,33 +57,34 @@ class CapesLocker extends PluginBase{
             }
         }
 
-        $this->players_capes = new Config( $this->getDataFolder() . "players_capes.yml", Config::YAML );
-        $this->wearing_cape = new Config( $this->getDataFolder() . "wearing_cape.yml", Config::YAML );
+        $this->players_capes = new Config($this->getDataFolder() . "players_capes.yml", Config::YAML);
+        $this->wearing_cape = new Config($this->getDataFolder() . "wearing_cape.yml", Config::YAML);
 
-        $this->getServer()->getPluginManager()->registerEvents( new SetCape($this), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new SetCape($this), $this);
 
-        $this->getServer()->getCommandMap()->register( $this->getName(), new Capes($this) );
-        $this->getServer()->getCommandMap()->register( $this->getName(), new ManageCapes($this) );
-        $this->getServer()->getCommandMap()->register( $this->getName(), new PlayersCapesCleaner($this) );
+        $this->getServer()->getCommandMap()->register($this->getName(), new Capes($this));
+        $this->getServer()->getCommandMap()->register($this->getName(), new ManageCapes($this));
+        $this->getServer()->getCommandMap()->register($this->getName(), new PlayersCapesCleaner($this));
     }
 
-    private function capeIdToCapeData( string $cape_id ){
+    private function capeIdToCapeData(string $cape_id): string
+    {
 
         $cape_file = $this->capes[$cape_id]["cape"];
         $path = $this->getDataFolder() . $cape_file . ".png";
 
         $image = @imagecreatefrompng($path);
-		if ($image === false) {
-			throw new Exception("Couldn't load image");
-		}
+        if ($image === false) {
+            throw new Exception("Couldn't load image");
+        }
 
-		$size = @imagesx($image) * @imagesy($image) * 4;
-		if ($size !== 64 * 32 * 4) {
-			throw new Exception("Invalid cape size");
-		}
+        $size = @imagesx($image) * @imagesy($image) * 4;
+        if ($size !== 64 * 32 * 4) {
+            throw new Exception("Invalid cape size");
+        }
 
-		$cape_data = "";
-		for ($y = 0, $height = imagesy($image); $y < $height; $y++) {
+        $cape_data = "";
+        for ($y = 0, $height = imagesy($image); $y < $height; $y++) {
             for ($x = 0, $width = imagesx($image); $x < $width; $x++) {
                 $color = imagecolorat($image, $x, $y);
                 $cape_data .= pack("c", ($color >> 16) & 0xFF) //red
@@ -88,12 +92,12 @@ class CapesLocker extends PluginBase{
                     . pack("c", $color & 0xFF) //blue
                     . pack("c", 255 - (($color & 0x7F000000) >> 23)); //alpha
             }
-        }    
+        }
 
-		imagedestroy($image);
-		return $cape_data;
+        imagedestroy($image);
+        return $cape_data;
     }
-   
+
 
 
 // - - - PLUGIN API
@@ -102,7 +106,8 @@ class CapesLocker extends PluginBase{
      * Return all capes
      * @return array
      */
-    public function getCapes(){
+    public function getCapes(): array
+    {
         return $this->capes;
     }
 
@@ -110,7 +115,8 @@ class CapesLocker extends PluginBase{
      * Return all default capes
      * @return array
      */
-    public function getDefaultCapes(){
+    public function getDefaultCapes(): array
+    {
         return $this->default_capes;
     }
 
@@ -119,7 +125,8 @@ class CapesLocker extends PluginBase{
      * @param string $cape_id
      * @return NULL|array
      */
-    public function getCapeById($cape_id){
+    public function getCapeById(string $cape_id): ?array
+    {
         return $this->capes[$cape_id] ?? NULL;
     }
 
@@ -128,7 +135,8 @@ class CapesLocker extends PluginBase{
      * @param Player $player Player to get his capes
      * @return array
      */
-    public function getPlayerCapes($player){
+    public function getPlayerCapes(Player $player): array
+    {
         $this->players_capes->reload();
         $player_capes_id = $this->players_capes->get(
             $player->getUniqueId()->toString(),
@@ -138,7 +146,7 @@ class CapesLocker extends PluginBase{
         $player_capes = [];
         foreach ($player_capes_id as $cape_id) {
             $cape = $this->getCapeById($cape_id);
-            if($cape){
+            if ($cape) {
                 $player_capes[$cape_id] = $cape;
             }
         }
@@ -150,7 +158,8 @@ class CapesLocker extends PluginBase{
      * @param Player $player
      * @return null|string
      */
-    public function getWearingCapeId( Player $player ) : null|string{
+    public function getWearingCapeId(Player $player): null|string
+    {
         $this->wearing_cape->reload();
         return $this->wearing_cape->get($player->getUniqueId()->toString(), null);
     }
@@ -159,7 +168,8 @@ class CapesLocker extends PluginBase{
      * Return all wearing capes
      * @return Config
      */
-    public function getWearingCapes() : Config{
+    public function getWearingCapes(): Config
+    {
         return $this->wearing_cape;
     }
 
@@ -168,13 +178,14 @@ class CapesLocker extends PluginBase{
      * @param Player $player Player to get his capes
      * @return array
      */
-    public function getPlayerPermittedCapes($player){
-        
-        $player_capes = [];
-        $capes = array_diff_key( $this->capes, $this->default_capes );
+    public function getPlayerPermittedCapes(Player $player): array
+    {
 
-        foreach($capes as $cape_id => $cape){
-            if( $player->hasPermission( "capeslocker.cape." . $cape_id ) ){
+        $player_capes = [];
+        $capes = array_diff_key($this->capes, $this->default_capes);
+
+        foreach ($capes as $cape_id => $cape) {
+            if ($player->hasPermission("capeslocker.cape." . $cape_id)) {
                 $player_capes[$cape_id] = $cape;
             }
         }
@@ -186,7 +197,8 @@ class CapesLocker extends PluginBase{
      * Get alls players capes (default capes and permitted capes isn't include)
      * @return Config
      */
-    public function getPlayersCapes(){
+    public function getPlayersCapes(): Config
+    {
         return $this->players_capes;
     }
 
@@ -196,22 +208,23 @@ class CapesLocker extends PluginBase{
      * @param string $cape_id The ID of the cape to unlock
      * @return void
      */
-    public function unlockCape( $player, $cape_id ){
+    public function unlockCape(Player $player, string $cape_id): void
+    {
 
-        if($this->hasCape($player, $cape_id)) return;
+        if ($this->hasCape($player, $cape_id)) return;
 
         $player_uuid = $player->getUniqueId()->toString();
 
         $this->players_capes->reload();
 
-        if($this->players_capes->exists($player_uuid)){
+        if ($this->players_capes->exists($player_uuid)) {
 
             $player_capes = $this->players_capes->get($player_uuid);
-            array_push($player_capes, $cape_id);
-            $this->players_capes->set( $player_uuid, $player_capes );
+            $player_capes[] = $cape_id;
+            $this->players_capes->set($player_uuid, $player_capes);
 
-        }else{
-            $this->players_capes->set( $player_uuid, [$cape_id] );
+        } else {
+            $this->players_capes->set($player_uuid, [$cape_id]);
         }
 
         $this->players_capes->save();
@@ -223,23 +236,24 @@ class CapesLocker extends PluginBase{
      * @param string $cape_id The ID of the cape to lock
      * @return void
      */
-    public function lockCape( $player, $cape_id){
+    public function lockCape(Player $player, string $cape_id): void
+    {
 
         // if cape is unlock by default OR player doesn't have this cape
-        if($this->capes[$cape_id]["default"] || !$this->hasCape($player, $cape_id)) return;
+        if ($this->capes[$cape_id]["default"] || !$this->hasCape($player, $cape_id)) return;
 
         $player_uuid = $player->getUniqueId()->toString();
-        
+
         $this->players_capes->reload();
         $player_capes = $this->players_capes->get($player_uuid);
 
         $cape_id_index = array_search($cape_id, $player_capes);
         unset($player_capes[$cape_id_index]);
 
-        if(empty($player_capes)){
+        if (empty($player_capes)) {
             $this->players_capes->remove($player_uuid);
-        }else{
-            $this->players_capes->set( $player_uuid, $player_capes);
+        } else {
+            $this->players_capes->set($player_uuid, $player_capes);
         }
         $this->players_capes->save();
     }
@@ -247,19 +261,21 @@ class CapesLocker extends PluginBase{
     /**
      * Unlock a cape for a specific player
      * @param Player $player Player to equip the cape with
-     * @param string $cape_id The ID of the cape to be equipped
+     * @param string|null $cape_id The ID of the cape to be equipped
      * @return void
+     * @throws Exception
      */
-    public function setPlayerCape( $player, $cape_id = null ){
+    public function setPlayerCape(Player $player, string $cape_id = null): void
+    {
 
         $old_skin = $player->getSkin();
         $this->wearing_cape->reload();
 
-        if(is_null($cape_id)){
+        if (is_null($cape_id)) {
 
             $wear_cape = $this->wearing_cape->get($player->getUniqueId()->toString());
 
-            if($wear_cape){
+            if ($wear_cape) {
                 $this->wearing_cape->remove($player->getUniqueId()->toString());
                 $this->wearing_cape->save();
             }
@@ -301,16 +317,17 @@ class CapesLocker extends PluginBase{
      * @param string $cape_id The ID of the cape to check
      * @return bool
      */
-    public function hasCape( $player, $cape_id ){
+    public function hasCape(Player $player, string $cape_id): bool
+    {
 
-        if( $this->capes[$cape_id]["default"] ) return true;
-        if( $player->hasPermission( "capeslocker.cape." . $cape_id ) ) return true;
+        if ($this->capes[$cape_id]["default"]) return true;
+        if ($player->hasPermission("capeslocker.cape." . $cape_id)) return true;
 
         $this->players_capes->reload();
         $player_capes = $this->players_capes->get(
             $player->getUniqueId()->toString()
         );
-        return $player_capes ? in_array($cape_id, $player_capes) : false;
+        return $player_capes && in_array($cape_id, $player_capes);
     }
 
 }
