@@ -4,17 +4,20 @@ namespace Verre2OuiSki\CapesLocker\Commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\permission\DefaultPermissions;
 use pocketmine\player\Player;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\FormIcon;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\MenuForm;
 use Verre2OuiSki\CapesLocker\libs\dktapps\pmforms\MenuOption;
 use Verre2OuiSki\CapesLocker\CapesLocker;
 
-class ManageCapes extends Command{
+class ManageCapes extends Command
+{
 
-    private $plugin;
+    private CapesLocker $plugin;
 
-    public function __construct( CapesLocker $plugin ){
+    public function __construct(CapesLocker $plugin)
+    {
         $this->plugin = $plugin;
 
         parent::__construct(
@@ -23,46 +26,54 @@ class ManageCapes extends Command{
             "/mcapes <player> [cape id] [lock|unlock]",
             ["mcapes"]
         );
-        $this->setPermission("capeslocker.command.managecapes");
+        $this->setPermission(DefaultPermissions::ROOT_OPERATOR);
     }
 
-    public function execute(CommandSender $sender, string $commandLabel, array $args){
-        
-        // Sender doesn't have permission to execute this command
-        if(!$this->testPermission($sender, $this->getPermission())) return;
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void
+    {
 
-        
+        // Sender doesn't have permission to execute this command
+        if (!$sender->hasPermission(DefaultPermissions::ROOT_OPERATOR)) {
+            $sender->sendMessage("Allow the player to run \"managecapes\" command");
+            return;
+        }
+
+
         $player = $this->plugin->getServer()->getPlayerByPrefix($args[0] ?? "😋");
         $cape_id = $args[1] ?? null;
         $action_type = $args[2] ?? null;
 
-        
+
         // Sender isn't a player and didn't specify args OR player isn't specify
-        if((!$sender instanceof Player && !$action_type) || !isset($args[0])){
-            $sender->sendMessage($this->getUsage()); return;
+        if ((!$sender instanceof Player && !$action_type) || !isset($args[0])) {
+            $sender->sendMessage($this->getUsage());
+            return;
         }
 
         // If player selected isn't connected
-        if(!$player){
-            $sender->sendMessage("§cCan't find player : $args[0]"); return;
+        if (!$player) {
+            $sender->sendMessage("§cCan't find player : $args[0]");
+            return;
         }
 
         // If sender use command
-        if( $action_type ){
+        if ($action_type) {
 
             $cape = $this->plugin->getCapeById($cape_id);
             // If cape selected doesn't exist
-            if(!$cape){
-                $sender->sendMessage("§cThere is no cape with this ID : $cape_id"); return;
+            if (!$cape) {
+                $sender->sendMessage("§cThere is no cape with this ID : $cape_id");
+                return;
             }
 
             // if action isn't lock or unlock
             $action_type = strtolower($action_type);
-            if($action_type !== "lock" && $action_type !== "unlock"){
-                $sender->sendMessage("§cInvalid action : $cape_id\nuse 'lock' or 'unlock' action"); return;
+            if ($action_type !== "lock" && $action_type !== "unlock") {
+                $sender->sendMessage("§cInvalid action : $cape_id\nuse 'lock' or 'unlock' action");
+                return;
             }
 
-            if($action_type === "lock"){
+            if ($action_type === "lock") {
                 $this->plugin->lockCape($player, $cape_id);
                 $sender->sendMessage("$cape_id has been removed from " . $player->getName() . "'s capes");
                 $player->sendMessage($cape["name"] . " §rhas been removed from your capes by " . $sender->getName());
@@ -76,14 +87,15 @@ class ManageCapes extends Command{
         }
 
         // Send manage capes form
-        if($sender instanceof Player){
+        if ($sender instanceof Player) {
             $sender->sendForm($this->playerCapeList($player));
         }
 
     }
 
-    
-    private function playerCapeList(Player $player_capes){
+
+    private function playerCapeList(Player $player_capes): MenuForm
+    {
 
         $options = [];
         $options_cape_link = [];
@@ -93,26 +105,20 @@ class ManageCapes extends Command{
 
         // Set player capes at top of the menu
         foreach ($unlocked_capes as $cape_id => $cape) {
-            array_push(
-                $options,
-                new MenuOption(
-                    $cape["name"],
-                    new FormIcon("textures/ui/icon_unlocked", FormIcon::IMAGE_TYPE_PATH)
-                )
+            $options[] = new MenuOption(
+                $cape["name"],
+                new FormIcon("textures/ui/icon_unlocked", FormIcon::IMAGE_TYPE_PATH)
             );
             $options_cape_link[array_key_last($options)] = $cape_id;
 
         }
 
         // Locked capes after unlocked capes
-        foreach($locked_capes as $cape_id => $cape){
+        foreach ($locked_capes as $cape_id => $cape) {
 
-            array_push(
-                $options,
-                new MenuOption(
-                    $cape["name"],
-                    new FormIcon("textures/ui/icon_lock", FormIcon::IMAGE_TYPE_PATH)
-                )
+            $options[] = new MenuOption(
+                $cape["name"],
+                new FormIcon("textures/ui/icon_lock", FormIcon::IMAGE_TYPE_PATH)
             );
             $options_cape_link[array_key_last($options)] = $cape_id;
         }
@@ -121,7 +127,7 @@ class ManageCapes extends Command{
             $player_capes->getName() . "'s capes",
             "",
             $options,
-            function( Player $submitter, int $selected ) use ($options_cape_link, $player_capes) : void {
+            function (Player $submitter, int $selected) use ($options_cape_link, $player_capes): void {
 
                 $submitter->sendForm(
                     $this->capeOptions(
@@ -133,7 +139,8 @@ class ManageCapes extends Command{
         );
     }
 
-    private function capeOptions(Player $player_capes, $selected_cape){
+    private function capeOptions(Player $player_capes, $selected_cape): MenuForm
+    {
 
         $cape = $this->plugin->getCapes()[$selected_cape];
 
@@ -154,19 +161,20 @@ class ManageCapes extends Command{
                     new FormIcon("textures/ui/arrow_left", FormIcon::IMAGE_TYPE_PATH)
                 )
             ],
-            function(Player $submitter, int $choice) use ($selected_cape, $player_capes) : void{
+            function (Player $submitter, int $choice) use ($selected_cape, $player_capes): void {
 
                 // If player go back
-                if($choice == 2){
+                if ($choice == 2) {
                     $submitter->sendForm(
                         $this->playerCapeList($player_capes)
-                    ); return;
+                    );
+                    return;
                 }
 
                 $cape_name = $this->plugin->getCapes()[$selected_cape]["name"];
 
                 // If the cape has been removed
-                if($choice == 0){
+                if ($choice == 0) {
 
                     $this->plugin->lockCape($player_capes, $selected_cape);
                     $submitter->sendMessage("$selected_cape has been removed from " . $player_capes->getName() . "'s capes");

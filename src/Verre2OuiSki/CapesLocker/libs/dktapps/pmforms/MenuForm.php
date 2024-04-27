@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Verre2OuiSki\CapesLocker\libs\dktapps\pmforms;
 
+use Closure;
 use pocketmine\form\FormValidationException;
 use pocketmine\player\Player;
 use pocketmine\utils\Utils;
@@ -34,35 +35,35 @@ use function is_int;
  * This form type presents a menu to the user with a list of options on it. The user may select an option or close the
  * form by clicking the X in the top left corner.
  *
- * @phpstan-type OnSubmit \Closure(Player $player, int $selectedOption) : void
- * @phpstan-type OnClose \Closure(Player $player) : void
+ * @phpstan-type OnSubmit Closure(Player $player, int $selectedOption) : void
+ * @phpstan-type OnClose Closure(Player $player) : void
  */
 class MenuForm extends BaseForm{
 
 	/** @var string */
-	protected $content;
+	protected string $content;
 	/** @var MenuOption[] */
-	private $options;
+	private array $options;
 	/**
-	 * @var \Closure
+	 * @var Closure
 	 * @phpstan-var OnSubmit
 	 */
-	private $onSubmit;
+	private Closure $onSubmit;
 	/**
-	 * @var \Closure|null
+	 * @var Closure|null
 	 * @phpstan-var OnClose
 	 */
-	private $onClose = null;
+	private ?Closure $onClose = null;
 
 	/**
 	 * @param MenuOption[]  $options
-	 * @param \Closure      $onSubmit signature `function(Player $player, int $selectedOption)`
-	 * @param \Closure|null $onClose signature `function(Player $player)`
+	 * @param Closure      $onSubmit signature `function(Player $player, int $selectedOption)`
+	 * @param Closure|null $onClose signature `function(Player $player)`
 	 *
 	 * @phpstan-param OnSubmit     $onSubmit
 	 * @phpstan-param OnClose|null $onClose
 	 */
-	public function __construct(string $title, string $text, array $options, \Closure $onSubmit, ?\Closure $onClose = null){
+	public function __construct(string $title, string $text, array $options, Closure $onSubmit, ?Closure $onClose = null){
 		parent::__construct($title);
 		$this->content = $text;
 		$this->options = array_values($options);

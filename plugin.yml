@@ -1,28 +1,11 @@
 ---
 
 name: CapesLocker
-version: 1.2.0
+version: 1.2.1
 main: Verre2OuiSki\CapesLocker\CapesLocker
-api: 4.0.0
+api: 5.0.0
 extensions: [gd]
 
 author: Verre2OuiSki
 description: Add your own capes to the server !
 website: https://github.com/Verre2OuiSki
-
-# - - - - - - - - - - - - - - - -
-
-permissions:
-
-  capeslocker.command.capes:
-    description: "Allow the player to run \"capes\" command"
-    default: true
-
-  capeslocker.command.managecapes:
-    description: "Allow the player to run \"managecapes\" command"
-    default: op
-
-  capeslocker.command.playerscapescleaner:
-    description: "Allow the player to run \"playerscapescleaner\" command"
-    default: op
-...
